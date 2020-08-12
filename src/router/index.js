@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import index from "../views/index";
-import list from "../views/pages/list";
+import list from "../views/pages/teacherList";
 import login from "../views/login";
 import addTeacher from "../views/pages/addTeacher";
+import subjectList from "../views/pages/subjectList";
+import addCourse from "../views/pages/addCourse";
 
 Vue.use(VueRouter)
 
@@ -23,6 +25,14 @@ Vue.use(VueRouter)
       {
         path: '/addteacher',
         component: addTeacher
+      },
+      {
+        path: '/subjectList',
+        component: subjectList
+      },
+      {
+        path: '/addCourse',
+        component: addCourse
       },
     ]
   },

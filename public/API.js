@@ -8,6 +8,9 @@ let api = {
     getTeacherById:url+'getTeacherInfo',
     updateTeacher: url + 'updateTeacher',
     uploadAvatar: rootUrl + '/eduservice/oss/upload',
+    getSubjectList: rootUrl + '/eduservice/subject/' + 'getAllSubject',
+    addSubject: rootUrl + '/eduservice/subject/' + 'addSubject',
+    getTwoSubjectList: rootUrl + '/eduservice/subject/' + 'getTwoLevelList',
 };
 
 export default api

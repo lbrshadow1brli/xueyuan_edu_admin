@@ -64,7 +64,6 @@
                 console.log(res);
                 this.form.avatar = res.data.avatar;
             },
-
         }
     }
 </script>
