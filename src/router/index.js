@@ -11,11 +11,11 @@ Vue.use(VueRouter)
 
   const routes = [
     {
-      path: '/',
+      path: '/login',
       component: login
     },
   {
-    path: '/index',
+    path: '/',
     component: index,
     children:[
       {

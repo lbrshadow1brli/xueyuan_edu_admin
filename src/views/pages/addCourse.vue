@@ -7,7 +7,8 @@
         </el-steps>
 
         <div class="width100">
-            <div class="width100 column">
+            <!--步骤1-->
+            <div class="width100 column" v-if="active==0">
                 <!--课程名称-->
                 <div class="alignCenter marginTop20">
                     <div class="fontBlack14" style="width: 80px;">课程标题</div>
@@ -54,6 +55,12 @@
                     </el-upload>
                 </div>
             </div>
+
+            <!--步骤2-->
+            <div class="width100" v-if="active==1">
+                <el-tree :data="chapterList" :props="defaultProps"></el-tree>
+            </div>
+
         </div>
 
         <el-button style="margin-top: 12px;" @click="next">下一步</el-button>
@@ -68,7 +75,7 @@
         name: "addCourse",
         data() {
             return {
-                active: 0,
+                active: 1,
                 title: '',
                 data: '',
 
@@ -85,14 +92,24 @@
                 description: '',
 
                 cover: '',
+
+                courseId: '',
+                chapterList: [],
+
+                defaultProps: {
+                    children: 'children',
+                    label: 'title'
+                },
             };
         },
         created() {
             this.getSubjectData();
             this.getTeacherList();
+            this.getChapterList();
         },
         methods: {
             next() {
+                this.addCourselves();
                 if (this.active++ > 2) this.active = 0;
             },
             getSubjectData() {
@@ -123,6 +140,29 @@
             handleAvatarSuccess(res, file) {
                 this.cover = res.data.avatar;
             },
+            // 上传课程信息
+            addCourselves() {
+                this.axios.post(api.addCourse,
+                    {
+                        title: this.title,
+                        subjectParentId: this.oneLevelSubject,
+                        subjectId: this.twoLevelSubject,
+                        teacherId: this.teacherId,
+                        lessonNum: this.courseNum,
+                        description: this.description,
+                        cover: this.cover
+                    })
+                    .then(res => {
+                        this.courseId = res.data.data.courseId;
+                    });
+            },
+            // 获取课程章节信息
+            getChapterList() {
+                this.axios.get(api.getChapterInfo + '/' +'1293720858195886082')
+                    .then(res => {
+                        this.chapterList = res.data.data.list;
+                    });
+            }
         }
     }
 </script>
