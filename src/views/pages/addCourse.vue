@@ -64,7 +64,6 @@
         </div>
 
         <el-button style="margin-top: 12px;" @click="next">下一步</el-button>
-
     </div>
 </template>
 
@@ -75,7 +74,7 @@
         name: "addCourse",
         data() {
             return {
-                active: 1,
+                active: 0,
                 title: '',
                 data: '',
 
@@ -106,12 +105,23 @@
             this.getSubjectData();
             this.getTeacherList();
             this.getChapterList();
+            if (this.$route.query.id) {
+                this.courseId = this.$route.query.id;
+                this.getCourseInfo();
+            }
         },
         methods: {
             next() {
-                this.addCourselves();
+                if (this.active == 0) {
+                    if (this.$route.query.id) {
+                        this.updateCourseInfo();
+                    } else {
+                        this.addCourselves();
+                    }
+                }
                 if (this.active++ > 2) this.active = 0;
             },
+            // 获取所有课程分类
             getSubjectData() {
                 this.axios.get(api.getSubjectList)
                     .then(res => {
@@ -119,6 +129,7 @@
                         this.data = res.data.data.list;
                     });
             },
+            // 获取所选课程一级分类的二级分类
             getTwoLevelSubject() {
 
                 this.twoLevelSubject = '';
@@ -140,7 +151,7 @@
             handleAvatarSuccess(res, file) {
                 this.cover = res.data.avatar;
             },
-            // 上传课程信息
+            // 添加课程基本信息
             addCourselves() {
                 this.axios.post(api.addCourse,
                     {
@@ -151,17 +162,48 @@
                         lessonNum: this.courseNum,
                         description: this.description,
                         cover: this.cover
-                    })
-                    .then(res => {
-                        this.courseId = res.data.data.courseId;
-                    });
+                    }).then(res => {
+                    this.courseId = res.data.data.courseId;
+                });
             },
             // 获取课程章节信息
             getChapterList() {
-                this.axios.get(api.getChapterInfo + '/' +'1293720858195886082')
+                this.axios.get(api.getChapterInfo + '/' + '1293720858195886082')
                     .then(res => {
                         this.chapterList = res.data.data.list;
                     });
+            },
+            // 获取课程详情
+            getCourseInfo() {
+                this.axios.get(api.getCouseInfo + '/' + this.courseId)
+                    .then(res => {
+                        console.log('课程详情数据');
+                        console.log(res);
+                        this.title = res.data.data.courseInfo.title;
+                        this.description = res.data.data.courseInfo.description;
+                        this.cover = res.data.data.courseInfo.cover;
+                        this.courseNum = res.data.data.courseInfo.lessonNum;
+                        this.oneLevelSubject = res.data.data.courseInfo.subjectParentId;
+                        this.getTwoLevelSubject();
+                        this.twoLevelSubject = res.data.data.courseInfo.subjectId;
+                        this.teacherId = res.data.data.courseInfo.teacherId;
+                    });
+            },
+            // 修改课程基本详情
+            updateCourseInfo() {
+                this.axios.post(api.updateCourseInfo,
+                    {
+                        id: this.courseId,
+                        title: this.title,
+                        subjectParentId: this.oneLevelSubject,
+                        subjectId: this.twoLevelSubject,
+                        teacherId: this.teacherId,
+                        lessonNum: this.courseNum,
+                        description: this.description,
+                        cover: this.cover
+                    }).then(res => {
+                    console.log(res);
+                });
             }
         }
     }

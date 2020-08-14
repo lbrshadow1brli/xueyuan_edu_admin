@@ -5,7 +5,7 @@ let api = {
     getTeacherList: url + 'moreConditionPageList',
     deleteTeacher: url,
     addTeacher: url + 'addTeacher',
-    getTeacherById:url+'getTeacherInfo',
+    getTeacherById: url + 'getTeacherInfo',
     updateTeacher: url + 'updateTeacher',
     uploadAvatar: rootUrl + '/eduservice/oss/upload',
     getSubjectList: rootUrl + '/eduservice/subject/' + 'getAllSubject',
@@ -13,6 +13,10 @@ let api = {
     getTwoSubjectList: rootUrl + '/eduservice/subject/' + 'getTwoLevelList',
     addCourse: rootUrl + '/eduservice/course/' + 'addCourse',
     getChapterInfo: rootUrl + '/eduservice/chapter/' + 'getChapterVideo',
+    getCourseList: rootUrl + '/eduservice/course/' + 'getCourseList',
+    getCouseInfo: rootUrl + '/eduservice/course/' + 'getCourseInfo',
+    updateCourseInfo: rootUrl + '/eduservice/course/' + 'updateCourseInfo',
+
 };
 
 export default api

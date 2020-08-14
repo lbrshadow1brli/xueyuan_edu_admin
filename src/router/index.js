@@ -6,6 +6,7 @@ import login from "../views/login";
 import addTeacher from "../views/pages/addTeacher";
 import subjectList from "../views/pages/subjectList";
 import addCourse from "../views/pages/addCourse";
+import courseList from "../views/pages/courseList";
 
 Vue.use(VueRouter)
 
@@ -33,6 +34,10 @@ Vue.use(VueRouter)
       {
         path: '/addCourse',
         component: addCourse
+      },
+      {
+        path: '/courseList',
+        component: courseList
       },
     ]
   },

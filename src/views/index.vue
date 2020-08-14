@@ -12,8 +12,9 @@
                     <el-menu-item-group>
                         <el-menu-item index="1-1" @click="$router.push('/list')">教师列表</el-menu-item>
                         <el-menu-item index="1-2" @click="$router.push('/addteacher')">添加讲师</el-menu-item>
-                        <el-menu-item index="1-3" @click="$router.push('/subjectList')">课程列表</el-menu-item>
+                        <el-menu-item index="1-3" @click="$router.push('/subjectList')">分类列表</el-menu-item>
                         <el-menu-item index="1-4" @click="$router.push('/addCourse')">添加课程</el-menu-item>
+                        <el-menu-item index="1-5" @click="$router.push('/courseList')">课程列表</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
 
