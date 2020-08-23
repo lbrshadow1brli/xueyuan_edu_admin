@@ -5,7 +5,7 @@
             <el-step title="步骤 2"></el-step>
             <el-step title="步骤 3"></el-step>
         </el-steps>
-
+        <!--列表-->
         <div class="width100">
             <!--步骤1-->
             <div class="width100 column" v-if="active==0">
@@ -17,18 +17,22 @@
                 <!--课程分类-->
                 <div class="alignCenter marginTop20">
                     <div class="fontBlack14" style="width: 80px;">分类名称</div>
-                    <el-select v-model="oneLevelSubject" placeholder="请选择" class="marginRight20" @change="getTwoLevelSubject">
-                        <el-option v-for="(item,index) in data" :key="index" :label="item.title" :value="item.id"></el-option>
+                    <el-select v-model="oneLevelSubject" placeholder="请选择" class="marginRight20"
+                               @change="getTwoLevelSubject">
+                        <el-option v-for="(item,index) in data" :key="index" :label="item.title"
+                                   :value="item.id"></el-option>
                     </el-select>
                     <el-select v-model="twoLevelSubject" placeholder="请选择" class="marginRight20">
-                        <el-option v-for="(item,index) in twoLevelSubjectList" :key="index" :label="item.title" :value="item.id"></el-option>
+                        <el-option v-for="(item,index) in twoLevelSubjectList" :key="index" :label="item.title"
+                                   :value="item.id"></el-option>
                     </el-select>
                 </div>
                 <!--课程讲师-->
                 <div class="alignCenter marginTop20">
                     <div class="fontBlack14" style="width: 80px;">课程讲师</div>
                     <el-select v-model="teacherId" placeholder="请选择" class="marginRight20" @change="getTwoLevelSubject">
-                        <el-option v-for="(item,index) in teacherList" :key="index" :label="item.name" :value="item.id"></el-option>
+                        <el-option v-for="(item,index) in teacherList" :key="index" :label="item.name"
+                                   :value="item.id"></el-option>
                     </el-select>
                 </div>
                 <!--总课时-->
@@ -58,12 +62,32 @@
 
             <!--步骤2-->
             <div class="width100" v-if="active==1">
-                <el-tree :data="chapterList" :props="defaultProps"></el-tree>
+                <el-tree :data="chapterList" :props="defaultProps">
+                    <span class="custom-tree-node" slot-scope="{ node, data }">
+                        <span>{{ node.label }}</span>
+                        <span>
+                            <el-button type="text" size="mini" @click="addChapterDialogShow=true">Append</el-button>
+                            <el-button type="text" size="mini" @click="() => remove(node, data)">Delete</el-button>
+                        </span>
+                    </span>
+                </el-tree>
+            </div>
+        </div>
+        <el-button style="margin-top: 12px;" @click="next">下一步</el-button>
+
+        <!--弹出层-->
+        <el-dialog title="收货地址" :visible.sync="addChapterDialogShow">
+
+            <div class="width100 alignCenter">
+                <div class="fontBlack14" style="width: 80px;">课程标题</div>
+                <el-input v-model="chapterTitle" class="marginRight20" style="width: 200px"></el-input>
             </div>
 
-        </div>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="addChapter">确 定</el-button>
+            </div>
+        </el-dialog>
 
-        <el-button style="margin-top: 12px;" @click="next">下一步</el-button>
     </div>
 </template>
 
@@ -99,12 +123,14 @@
                     children: 'children',
                     label: 'title'
                 },
+
+                addChapterDialogShow: false, //添加章节dialog
+                chapterTitle: '', //课程标题
             };
         },
         created() {
             this.getSubjectData();
             this.getTeacherList();
-            this.getChapterList();
             if (this.$route.query.id) {
                 this.courseId = this.$route.query.id;
                 this.getCourseInfo();
@@ -118,8 +144,12 @@
                     } else {
                         this.addCourselves();
                     }
+                    this.getChapterList();
+                } else if (this.active == 1) {
+                } else {
+                    return this.active = 0;
                 }
-                if (this.active++ > 2) this.active = 0;
+                this.active++;
             },
             // 获取所有课程分类
             getSubjectData() {
@@ -134,7 +164,7 @@
 
                 this.twoLevelSubject = '';
 
-                this.axios.post(api.getTwoSubjectList+'?parentId='+this.oneLevelSubject, {})
+                this.axios.post(api.getTwoSubjectList + '?parentId=' + this.oneLevelSubject, {})
                     .then(res => {
                         console.log(res);
                         this.twoLevelSubjectList = res.data.data.list;
@@ -166,9 +196,9 @@
                     this.courseId = res.data.data.courseId;
                 });
             },
-            // 获取课程章节信息
+            // 获取课程章节列表
             getChapterList() {
-                this.axios.get(api.getChapterInfo + '/' + '1293720858195886082')
+                this.axios.get(api.getChapterInfo + '/' + this.courseId)
                     .then(res => {
                         this.chapterList = res.data.data.list;
                     });
@@ -204,6 +234,15 @@
                     }).then(res => {
                     console.log(res);
                 });
+            },
+            // 添加章节
+            addChapter() {
+                this.axios.post(api.addChapter, {title:this.chapterTitle,coureseId:this.courseId})
+                    .then(res => {
+                        console.log(res);
+                        this.addChapterDialogShow = false;
+                        this.getChapterList();
+                    });
             }
         }
     }

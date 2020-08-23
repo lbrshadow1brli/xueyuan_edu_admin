@@ -1,6 +1,6 @@
 <template>
     <div class="page">
-        <!--教师列表-->
+        <!--列表-->
         <div class="teacherList">
             <el-table :data="tableData" style="width: 100%;">
                 <el-table-column

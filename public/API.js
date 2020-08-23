@@ -16,7 +16,7 @@ let api = {
     getCourseList: rootUrl + '/eduservice/course/' + 'getCourseList',
     getCouseInfo: rootUrl + '/eduservice/course/' + 'getCourseInfo',
     updateCourseInfo: rootUrl + '/eduservice/course/' + 'updateCourseInfo',
-
+    addChapter: rootUrl + '/eduservice/chapter/' + 'addChapter',
 };
 
 export default api
