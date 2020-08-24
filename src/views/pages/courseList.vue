@@ -62,7 +62,7 @@
             },
             //删除
             handleDelete(index, row) {
-                this.axios.delete(api.deleteTeacher + row.id)
+                this.axios.delete(api.deleteCourse+'/' + row.id)
                     .then(res => {
                         this.getTeacherList(1);
                     });
