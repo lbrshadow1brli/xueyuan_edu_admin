@@ -85,6 +85,7 @@
                 </div>
             </div>
 
+            <!--步骤3-->
             <div class="width100 backgroundGray spacebetween" v-if="active==2">
                 <img :src="PublishCourseData.cover" class="courseCover">
                 <div class="column">
@@ -93,7 +94,6 @@
                     <div>{{PublishCourseData.subjectLevelOne}}{{PublishCourseData.subjectLevelTwo}}</div>
                     <div>{{PublishCourseData.lessonNum}}</div>
                     <div>￥{{PublishCourseData.price}}</div>
-
                 </div>
             </div>
         </div>
@@ -202,6 +202,7 @@
                 } else if (this.active == 1) {
                     this.getPublishCourseInfo();
                 } else {
+                    this.publishCourse();
                     return this.active = 0;
                 }
                 this.active++;
@@ -354,6 +355,13 @@
                     .then(res => {
                         console.log(res);
                         this.PublishCourseData = res.data.data.PublishCourse;
+                    });
+            },
+            //最终发布所有课程
+            publishCourse() {
+                this.axios.post(api.publishCourse + '/' + this.courseId)
+                    .then(res => {
+                        console.log(res);
                     });
             }
         },
