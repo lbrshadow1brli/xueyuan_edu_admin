@@ -22,6 +22,8 @@ let api = {
     updateChapterInfo: rootUrl + '/eduservice/chapter/' + 'updateChapter', //修改章节信息
     deleteCourse: rootUrl + '/eduservice/course/' + 'deleteCourse', //删除课程
     addVideo: rootUrl + '/eduservice/video/' + 'addVideo', //添加视频
+    deleteVideo: rootUrl + '/eduservice/video/' + 'deleteVideo', //删除小节
+    getPublishCourseInfo: rootUrl + '/eduservice/course/' + 'getPublishCourseInfo', //获取课程的所有信息
 };
 
 export default api

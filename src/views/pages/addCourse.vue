@@ -65,20 +65,42 @@
                 <!--添加章节-->
                 <div @click="addChapterDialogShow=true">添加章节</div>
                 <!--列表-->
-                <el-tree :data="chapterList" :props="defaultProps">
-                    <span class="custom-tree-node" slot-scope="{ node, data }">
-                        <span>{{ node.label }}</span>
-                        <span>
-                            <el-button type="text" size="mini" @click="showVideoDialog(data)">添加</el-button>
-                            <el-button type="text" size="mini" @click="remove(node, data)">删除</el-button>
-                            <el-button type="text" size="mini" @click="getChapterInfo(data)">修改</el-button>
-                        </span>
-                    </span>
-                </el-tree>
+                <div class="windth100 column">
+                    <!--item-->
+                    <div class="column" v-for="(item,index) in chapterList">
+                        <div class="alignCenter">
+                            <div class="fontBlack18 marginRight20">{{item.title}}</div>
+                            <div class="fontBlack18 marginRight20" @click="showVideoDialog(item.id)">添加</div>
+                            <div class="fontBlack18 marginRight20" @click="getChapterInfo(item.id)">修改</div>
+                            <div class="fontBlack18 marginRight20" @click="deleteChapter(item.id)">删除</div>
+                        </div>
+
+                        <div class="column padding20">
+                            <div class="alignCenter" v-for="(i,t) in item.children">
+                                <div class="fontBlack14 marginRight20">{{i.title}}</div>
+                                <div class="fontBlack18 marginRight20" @click="deleteVideo(i.id)">删除</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="width100 backgroundGray spacebetween" v-if="active==2">
+                <img :src="PublishCourseData.cover" class="courseCover">
+                <div class="column">
+                    <div>{{PublishCourseData.title}}</div>
+                    <div>{{PublishCourseData.teacherName}}</div>
+                    <div>{{PublishCourseData.subjectLevelOne}}{{PublishCourseData.subjectLevelTwo}}</div>
+                    <div>{{PublishCourseData.lessonNum}}</div>
+                    <div>￥{{PublishCourseData.price}}</div>
+
+                </div>
             </div>
         </div>
+
         <!--下一步按钮-->
         <el-button style="margin-top: 12px;" @click="next">下一步</el-button>
+
         <!--添加章节弹出层-->
         <el-dialog title="章节信息" :visible.sync="addChapterDialogShow">
 
@@ -103,7 +125,6 @@
                 <el-button type="primary" @click="editChapterInfo">确 定</el-button>
             </div>
         </el-dialog>
-
         <!--添加小节弹出层-->
         <el-dialog title="添加小节" :visible.sync="addVideoDialogShow">
 
@@ -158,6 +179,7 @@
                 currentChapterId: '', // 修改章节的ID
                 addVideoDialogShow: false, //添加章节dialog
                 videoTitle: '', //小节标题
+                PublishCourseData: '',//发布课程的数据
             };
         },
         created() {
@@ -178,6 +200,7 @@
                     }
                     this.getChapterList();
                 } else if (this.active == 1) {
+                    this.getPublishCourseInfo();
                 } else {
                     return this.active = 0;
                 }
@@ -232,6 +255,8 @@
             getChapterList() {
                 this.axios.get(api.getChapterList + '/' + this.courseId)
                     .then(res => {
+                        console.log('章节列表');
+                        console.log(res.data.data.list);
                         this.chapterList = res.data.data.list;
                     });
             },
@@ -277,20 +302,17 @@
                     });
             },
             // 删除章节
-            remove(node, data) {
-                console.log('删除的数据信息');
-                console.log(data);
-                this.axios.delete(api.deleteChapter + '/' + data.id)
+            deleteChapter(id) {
+                this.axios.delete(api.deleteChapter + '/' + id)
                     .then(res => {
                         this.getChapterList();
                     });
             },
             // 获取章节信息
-            getChapterInfo(data) {
+            getChapterInfo(id) {
                 this.editDialogShow = true;
-                console.log(data);
                 // 获取章节详情
-                this.axios.get(api.getChapterInfo + '/' + data.id)
+                this.axios.get(api.getChapterInfo + '/' + id)
                     .then(res => {
                         this.chapterTitle = res.data.data.ChapterInfo.title;
                         this.currentChapterId = res.data.data.ChapterInfo.id;
@@ -305,10 +327,9 @@
                     });
             },
             // 弹出添加小节弹窗
-            showVideoDialog(data) {
-                console.log(data);
+            showVideoDialog(id) {
                 this.addVideoDialogShow = true;
-                this.currentChapterId = data.id;
+                this.currentChapterId = id;
             },
             // 添加小节
             addVideo() {
@@ -317,6 +338,22 @@
                     .then(res => {
                         console.log(res);
                         this.getChapterList();
+                        this.addVideoDialogShow = false;
+                    });
+            },
+            // 删除小节
+            deleteVideo(id) {
+                this.axios.delete(api.deleteVideo + '/' + id)
+                    .then(res => {
+                        this.getChapterList();
+                    });
+            },
+            // 获取课程所有信息
+            getPublishCourseInfo() {
+                this.axios.get(api.getPublishCourseInfo + '/' + this.courseId)
+                    .then(res => {
+                        console.log(res);
+                        this.PublishCourseData = res.data.data.PublishCourse;
                     });
             }
         },
@@ -324,5 +361,8 @@
 </script>
 
 <style scoped>
-
+.courseCover {
+    width: 500px;
+    height: 500px;
+}
 </style>
