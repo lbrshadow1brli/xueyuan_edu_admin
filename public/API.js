@@ -24,7 +24,8 @@ let api = {
     addVideo: rootUrl + '/eduservice/video/' + 'addVideo', //添加视频
     deleteVideo: rootUrl + '/eduservice/video/' + 'deleteVideo', //删除小节
     getPublishCourseInfo: rootUrl + '/eduservice/course/' + 'getPublishCourseInfo', //获取课程的所有信息
-    publishCourse: rootUrl + '/eduservice/course/' + 'publishCourse' //最终发布课程
+    publishCourse: rootUrl + '/eduservice/course/' + 'publishCourse', //最终发布课程
+    uploadVod: rootUrl + '/eduservice/vod/uploadVideo', //上传视频到阿里云
 };
 
 export default api

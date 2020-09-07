@@ -133,6 +133,16 @@
                 <el-input v-model="videoTitle" class="marginRight20" style="width: 200px"></el-input>
             </div>
 
+            <div>
+                <el-upload
+                        class="upload-demo"
+                        :action="UPLOADAPI"
+                        :on-success="uploadVodSuccess"
+                        :file-list="fileList">
+                    <el-button size="small" type="primary">点击上传</el-button>
+                </el-upload>
+            </div>
+
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="addVideo">确 定</el-button>
             </div>
@@ -180,6 +190,10 @@
                 addVideoDialogShow: false, //添加章节dialog
                 videoTitle: '', //小节标题
                 PublishCourseData: '',//发布课程的数据
+                UPLOADAPI: '',// API 域名根目录
+                vodId: '', //阿里视频的id
+                videoOriginalName: '', //视频名称
+                fileList: [],// 上传视频的列表
             };
         },
         created() {
@@ -189,6 +203,7 @@
                 this.courseId = this.$route.query.id;
                 this.getCourseInfo();
             }
+            this.UPLOADAPI = api.uploadVod;
         },
         methods: {
             next() {
@@ -335,7 +350,7 @@
             // 添加小节
             addVideo() {
                 this.axios.post(api.addVideo, {title: this.videoTitle, coureseId: this.courseId,
-                    chapterId: this.currentChapterId})
+                    chapterId: this.currentChapterId, videoSourceId: this.vodId,videoOriginalName:this.videoOriginalName})
                     .then(res => {
                         console.log(res);
                         this.getChapterList();
@@ -363,7 +378,12 @@
                     .then(res => {
                         console.log(res);
                     });
-            }
+            },
+            //上传视频
+            uploadVodSuccess(res,file) {
+                this.vodId = res.data.videoId;
+                this.videoOriginalName = file.name;
+            },
         },
     }
 </script>
